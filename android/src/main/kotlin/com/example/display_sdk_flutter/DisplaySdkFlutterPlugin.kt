@@ -3,8 +3,8 @@ package com.example.display_sdk_flutter
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
+//import com.hjq.permissions.Permission
+//import com.hjq.permissions.XXPermissions
 import com.pavolibrary.utils.LogUtils
 import com.serialport.api.SerialPortFinder
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -90,24 +90,24 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     LogUtils.isDeBug = true
     LogUtils.isWrite = true
     if (LogUtils.isWrite) {
-      verifyPermissions(activity) //申请存储权限
+      // verifyPermissions(activity) //申请存储权限
     }
   }
 
-  fun verifyPermissions(activity: Activity?) {
-    XXPermissions.with(activity) // 适配 Android 11 分区存储这样写
-      .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-      .interceptor(PermissionInterceptor())
-      .request { permissions, all ->
-        if (all) {
-          Toast.makeText(
-            context,
-            "permission successfull",
-            Toast.LENGTH_SHORT
-          ).show()
-        }
-      }
-  }
+//  fun verifyPermissions(activity: Activity?) {
+//    XXPermissions.with(activity) // 适配 Android 11 分区存储这样写
+//      .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+//      .interceptor(PermissionInterceptor())
+//      .request { permissions, all ->
+//        if (all) {
+//          Toast.makeText(
+//            context,
+//            "permission successfull",
+//            Toast.LENGTH_SHORT
+//          ).show()
+//        }
+//      }
+//  }
 
   fun serialPortFinder(call: MethodCall, result: Result) {
     var mSerialPortFinder = SerialPortFinder()
