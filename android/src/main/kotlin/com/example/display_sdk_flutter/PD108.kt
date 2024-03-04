@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.pavolibrary.commands.DeviceAPI
 import com.pavolibrary.commands.LedAPI
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.Timer
 import java.util.TimerTask
@@ -50,52 +51,78 @@ class PD108(mcontext : Context,serialPort : String, serialBaudrate: Int, serialF
     fun onStop() {
         context.unregisterReceiver(usbReceiver)
     }
-    fun onDestroy() {
+    fun onDestroy(result: MethodChannel.Result) {
         if (mLed8 != null) {
             mLed8!!.disconnect()
             mLed8 = null
+            result.success(true)
+        }else{
+            result.success(false)
         }
     }
 
      fun connect(result: MethodChannel.Result) {
-        mLed8?.disconnect()
-        runnable = Runnable {
-            if (DeviceAPI.SUCCESS == mLed8!!.connect(serialPort, serialBaudrate, serialFlag)) {
-                result.success(true)
-            } else {
-                result.success(false)
-            }
-        }
-        Thread(runnable).start()
+         mLed8?.disconnect()
+         var data = mLed8?.connect(serialPort, serialBaudrate, serialFlag)
+         if(data == DeviceAPI.SUCCESS){
+             result.success(true)
+         }else{
+             result.success(false)
+         }
+//        runnable = Runnable {
+//            if (DeviceAPI.SUCCESS == mLed8!!.connect(serialPort, serialBaudrate, serialFlag)) {
+//                result.success(true)
+//            } else {
+//                result.success(false)
+//            }
+//        }
+//        Thread(runnable).start()
     }
 
-    fun displayText(text: String) {
+    fun displayText(text: String,result: MethodChannel.Result) {
         if (mLed8 != null && mLed8!!.isConnect && text.isNotEmpty()) {
             mLed8!!.LED_Display(text, "ASCII")
+            result.success(true)
+        }else{
+            result.success(false)
         }
     }
-    fun cleanLine() {
+    fun cleanLine(result: MethodChannel.Result) {
         if (mLed8 != null && mLed8!!.isConnect) {
             mLed8!!.LED_ClearLine()
+            result.success(true)
+        }else{
+            result.success(false)
         }
     }
 
-    fun cleanScreen() {
+    fun cleanScreen(result: MethodChannel.Result) {
         if (mLed8 != null && mLed8!!.isConnect) {
             mLed8!!.LED_ClearScreen()
+            result.success(true);
+        }else{
+            result.success(false);
         }
     }
 
-    fun ledInit() {
+    fun ledInit(result: MethodChannel.Result) {
         if (mLed8 != null && mLed8!!.isConnect) {
             mLed8!!.LED_Init()
+            result.success(true)
+        }else{
+            result.success(false)
         }
     }
-    fun disConnect() {
+    fun disConnect(result: MethodChannel.Result) {
         if (mLed8 != null && mLed8!!.isConnect) {
             mLed8!!.disconnect()
+            mLed8 = null
+            result.success(true)
+        }else{
+            mLed8 = null
+            result.success(false);
         }
-        mLed8 = null
+
     }
 
     fun testingEnable(value : Boolean) {

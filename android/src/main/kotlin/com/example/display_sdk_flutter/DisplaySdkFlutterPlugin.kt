@@ -22,18 +22,27 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var permissionAccess : String = "permissionAccess";
   private var serialPortFinder = "serialPortFinder";
   private var displayConnectSdk = "displayConnectSdk";
+  private var connectionCheck = "connectionCheck";
+  private var distroysdk = "distroy";
+  private var clearLine = "clearLine";
+  private var clearScreen = "clearScreen";
+  private var ledInit = "ledInit";
+  private var disconnect = "disconnect";
+  private var displayText = "displayText";
 
 
   private var displayType : String = "PD108";
   private var serialBaudrate : Int? = 9600
   private var serialPort : String? = "USB"
   private var serialFlag : Int? = 0;
+  private lateinit var pd108 : PD108;
   private lateinit var context : Context;
   private lateinit var activity : Activity
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "display_sdk_flutter")
     context = flutterPluginBinding.applicationContext
+    pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
     channel.setMethodCallHandler(this)
   }
 
@@ -42,14 +51,27 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } else if (call.method == setDisplayType){
       setDisplayType(call, result)
-    }else if (call.method == permissionAccess){
+    } else if (call.method == permissionAccess){
       permissionAccess()
-    }else if (call.method == serialPortFinder){
+    } else if (call.method == serialPortFinder){
       serialPortFinder(call, result)
     } else if(call.method == displayConnectSdk) {
       sdkConnect(call, result)
-    }
-    else {
+    } else if(call.method == connectionCheck){
+      connectionCheck(call, result)
+    } else if(call.method == distroysdk){
+      distroySdk(call, result)
+    } else if (call.method == clearLine){
+      clearLine(call, result)
+    } else if (call.method == clearScreen){
+      clearScreen(call, result)
+    } else if (call.method == ledInit){
+      ledInit(call, result)
+    } else if (call.method == disconnect){
+      disconnected(call, result)
+    } else if (call.method == displayText){
+      displayText(call, result)
+    } else {
       result.notImplemented()
     }
   }
@@ -101,8 +123,37 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   fun sdkConnect(call: MethodCall, result: Result) {
     serialPort = call.argument<String>("serialPort")
     serialBaudrate = call.argument<Int>("serialBaudrate")
-    var pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
+    pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
     pd108.connect(result)
+  }
+
+  fun connectionCheck(call: MethodCall, result: Result) {
+    pd108.connectedCheck(result)
+  }
+
+  fun distroySdk(call: MethodCall, result: Result) {
+    pd108.onDestroy(result);
+  }
+
+  fun clearLine(call: MethodCall, result: Result) {
+    pd108.cleanLine(result)
+  }
+
+  fun clearScreen(call: MethodCall, result: Result) {
+    pd108.cleanScreen(result)
+  }
+
+  fun ledInit(call: MethodCall, result: Result) {
+    pd108.ledInit(result)
+  }
+
+  fun disconnected(call: MethodCall, result: Result) {
+    pd108.disConnect(result)
+  }
+
+  fun displayText(call: MethodCall, result: Result) {
+    var textdata : String? = call.argument<String>("text")
+    pd108.displayText(textdata!!, result)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
