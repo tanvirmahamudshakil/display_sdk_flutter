@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -67,9 +67,10 @@ android {
     }
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     implementation files('libs/DisplaySDK-2.2.2.jar')
-    implementation files('libs/classes.jar')
+    implementation files('libs/XXPermissions-13.5.aar')
+//    implementation files('libs/classes.jar')
 //    implementation files('libs/XXPermissions-13.5.aar')
 
 }
