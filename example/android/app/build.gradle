@@ -69,8 +69,6 @@ flutter {
 dependencies { 
     
     // implementation files('D:\\Tanvir\\display_sdk_flutter\\android\\libs\\XXPermissions-13.5.aar') 
-    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
-    implementation files('libs/DisplaySDK-2.2.2.jar')
-    implementation files('libs/XXPermissions-13.5.aar')
+
     
-    }
+}
