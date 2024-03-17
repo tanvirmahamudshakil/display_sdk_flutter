@@ -139,7 +139,7 @@ class PD108(mcontext : Context,serialPort : String, serialBaudrate: Int, serialF
 
         if (mLed8 != null && mLed8!!.isConnect) {
             mLed8!!.LED_SetStatusLight(1)
-            
+
         }else{
 
         }
