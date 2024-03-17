@@ -135,10 +135,9 @@ class PD108(mcontext : Context,serialPort : String, serialBaudrate: Int, serialF
         }
     }
 
-    fun ledSetStatusLight() {
-
+    fun ledSetStatusLight(status : Int) {
         if (mLed8 != null && mLed8!!.isConnect) {
-            mLed8!!.LED_SetStatusLight(1)
+            mLed8!!.LED_SetStatusLight(status)
 
         }else{
 

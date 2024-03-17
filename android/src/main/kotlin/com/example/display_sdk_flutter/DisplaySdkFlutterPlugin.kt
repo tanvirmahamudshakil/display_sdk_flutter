@@ -29,6 +29,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var ledInit = "ledInit";
   private var disconnect = "disconnect";
   private var displayText = "displayText";
+  private var letStatusLight = "letStatusLight";
 
 
   private var displayType : String = "PD108";
@@ -71,7 +72,10 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       disconnected(call, result)
     } else if (call.method == displayText){
       displayText(call, result)
-    } else {
+    } else if (call.method == displayText) {
+      ledSetStatusLight(call, result)
+    }
+    else {
       result.notImplemented()
     }
   }
@@ -84,6 +88,17 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }else{
       result.success(false)
     }
+  }
+
+  fun ledSetStatusLight(call: MethodCall, result: Result) {
+    var type: Int? = call.argument<Int>("status")
+    if (type != null) {
+      pd108.ledSetStatusLight(type)
+      result.success(true);
+    }else{
+      result.success(false);
+    }
+
   }
 
   fun permissionAccess() {

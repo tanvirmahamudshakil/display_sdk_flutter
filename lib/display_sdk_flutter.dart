@@ -13,6 +13,7 @@ class DisplaySdkFlutter {
   final String _ledInit = "ledInit";
   final String _disconnect = "disconnect";
   final String _displayText = "displayText";
+  final String _letStatusLight = "letStatusLight";
 
   Future<String?> getPlatformVersion() async {
     final version =
@@ -78,7 +79,14 @@ class DisplaySdkFlutter {
   }
 
   Future<bool?> displayText({required String text}) async {
-    final version = await methodChannel.invokeMethod<bool>(_displayText, {"text": text});
+    final version =
+        await methodChannel.invokeMethod<bool>(_displayText, {"text": text});
+    return version;
+  }
+
+  Future<bool?> ledStatusLight({required int status}) async {
+    final version = await methodChannel
+        .invokeMethod<bool>(_letStatusLight, {"status": status});
     return version;
   }
 }

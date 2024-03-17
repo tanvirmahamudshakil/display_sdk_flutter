@@ -1,7 +1,6 @@
 name: display_sdk_flutter
 description: "A new Flutter project."
 version: 0.0.1
-homepage:
 
 environment:
   sdk: '>=3.2.6 <4.0.0'
