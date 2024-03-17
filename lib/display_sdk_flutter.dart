@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DisplaySdkFlutter {
   final methodChannel = const MethodChannel('display_sdk_flutter');
@@ -88,5 +89,16 @@ class DisplaySdkFlutter {
     final version = await methodChannel
         .invokeMethod<bool>(_letStatusLight, {"status": status});
     return version;
+  }
+    void permissionForDisplaySdk() async {
+    var manageExternalStorage = await Permission.manageExternalStorage.status;
+    var storage = await Permission.storage.status;
+    if (manageExternalStorage.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
+
+    if (storage.isDenied) {
+      await Permission.storage.request();
+    }
   }
 }
