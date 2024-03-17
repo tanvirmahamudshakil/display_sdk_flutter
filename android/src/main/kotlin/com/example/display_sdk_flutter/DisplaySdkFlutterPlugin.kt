@@ -72,7 +72,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       disconnected(call, result)
     } else if (call.method == displayText){
       displayText(call, result)
-    } else if (call.method == displayText) {
+    } else if (call.method == letStatusLight) {
       ledSetStatusLight(call, result)
     }
     else {
