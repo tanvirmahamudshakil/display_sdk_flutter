@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.pavolibrary.commands.DeviceAPI
 import com.pavolibrary.commands.LedAPI
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.Timer
 import java.util.TimerTask
@@ -24,6 +23,7 @@ class PD108(mcontext : Context,serialPort : String, serialBaudrate: Int, serialF
     private var testStatusCount = 1
     private var usbReceiver: UsbReceiver? = null
     private var mLed8: LedAPI? = null
+
     init {
         context = mcontext
         this.serialPort = serialPort
@@ -122,7 +122,6 @@ class PD108(mcontext : Context,serialPort : String, serialBaudrate: Int, serialF
             mLed8 = null
             result.success(false);
         }
-
     }
 
     fun testingEnable(value : Boolean) {
@@ -133,6 +132,16 @@ class PD108(mcontext : Context,serialPort : String, serialBaudrate: Int, serialF
             }
         }else{
             cancelKeepTesting()
+        }
+    }
+
+    fun ledSetStatusLight() {
+
+        if (mLed8 != null && mLed8!!.isConnect) {
+            mLed8!!.LED_SetStatusLight(1)
+            
+        }else{
+
         }
     }
 
