@@ -42,7 +42,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "display_sdk_flutter")
     context = flutterPluginBinding.applicationContext
-    pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
+    //pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
     channel.setMethodCallHandler(this)
   }
 
