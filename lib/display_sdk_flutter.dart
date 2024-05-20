@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DisplaySdkFlutter {
   final methodChannel = const MethodChannel('display_sdk_flutter');
@@ -13,6 +14,7 @@ class DisplaySdkFlutter {
   final String _ledInit = "ledInit";
   final String _disconnect = "disconnect";
   final String _displayText = "displayText";
+  final String _letStatusLight = "letStatusLight";
 
   Future<String?> getPlatformVersion() async {
     final version =
@@ -78,7 +80,25 @@ class DisplaySdkFlutter {
   }
 
   Future<bool?> displayText({required String text}) async {
-    final version = await methodChannel.invokeMethod<bool>(_displayText, {"text": text});
+    final version =
+        await methodChannel.invokeMethod<bool>(_displayText, {"text": text});
     return version;
+  }
+
+  Future<bool?> ledStatusLight({required int status}) async {
+    final version = await methodChannel
+        .invokeMethod<bool>(_letStatusLight, {"status": status});
+    return version;
+  }
+    void permissionForDisplaySdk() async {
+    var manageExternalStorage = await Permission.manageExternalStorage.status;
+    var storage = await Permission.storage.status;
+    if (manageExternalStorage.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
+
+    if (storage.isDenied) {
+      await Permission.storage.request();
+    }
   }
 }

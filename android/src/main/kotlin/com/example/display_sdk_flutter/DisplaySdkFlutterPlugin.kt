@@ -3,8 +3,8 @@ package com.example.display_sdk_flutter
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
+//import com.hjq.permissions.Permission
+//import com.hjq.permissions.XXPermissions
 import com.pavolibrary.utils.LogUtils
 import com.serialport.api.SerialPortFinder
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -29,6 +29,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var ledInit = "ledInit";
   private var disconnect = "disconnect";
   private var displayText = "displayText";
+  private var letStatusLight = "letStatusLight";
 
 
   private var displayType : String = "PD108";
@@ -71,7 +72,10 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       disconnected(call, result)
     } else if (call.method == displayText){
       displayText(call, result)
-    } else {
+    } else if (call.method == letStatusLight) {
+      ledSetStatusLight(call, result)
+    }
+    else {
       result.notImplemented()
     }
   }
@@ -86,6 +90,17 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
   }
 
+  fun ledSetStatusLight(call: MethodCall, result: Result) {
+    var type: Int? = call.argument<Int>("status")
+    if (type != null) {
+      pd108.ledSetStatusLight(type)
+      result.success(true);
+    }else{
+      result.success(false);
+    }
+
+  }
+
   fun permissionAccess() {
     LogUtils.isDeBug = true
     LogUtils.isWrite = true
@@ -95,18 +110,18 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   fun verifyPermissions(activity: Activity?) {
-    XXPermissions.with(activity) // 适配 Android 11 分区存储这样写
-      .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-      .interceptor(PermissionInterceptor())
-      .request { permissions, all ->
-        if (all) {
-          Toast.makeText(
-            context,
-            "permission successfull",
-            Toast.LENGTH_SHORT
-          ).show()
-        }
-      }
+//    XXPermissions.with(activity) // 适配 Android 11 分区存储这样写
+//      .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+//      .interceptor(PermissionInterceptor())
+//      .request { permissions, all ->
+//        if (all) {
+//          Toast.makeText(
+//            context,
+//            "permission successfull",
+//            Toast.LENGTH_SHORT
+//          ).show()
+//        }
+//      }
   }
 
   fun serialPortFinder(call: MethodCall, result: Result) {

@@ -1,4 +1,5 @@
 import 'package:display_sdk_flutter/enumvalue.dart';
+import 'package:display_sdk_flutter_example/led.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:display_sdk_flutter/display_sdk_flutter.dart';
@@ -43,14 +44,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Column(
-          children: [permissionAccess(), listDiplayType(), serialPortFinder(), displaySdkConnect()],
-        ),
-      ),
+      home: LedDisplay(),
+      // home: Scaffold(
+      //   appBar: AppBar(
+      //     title: const Text('Plugin example app'),
+      //   ),
+      //   body: Column(
+      //     children: [permissionAccess(), listDiplayType(), serialPortFinder(), displaySdkConnect()],
+      //   ),
+      // ),
     );
   }
 
