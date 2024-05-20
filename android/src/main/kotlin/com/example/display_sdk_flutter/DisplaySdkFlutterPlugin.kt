@@ -36,7 +36,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var serialBaudrate : Int? = 9600
   private var serialPort : String? = "USB"
   private var serialFlag : Int? = 0;
-  private lateinit var pd108 : PD108;
+  private  var pd108 : PD108? = null;
   private lateinit var context : Context;
   private lateinit var activity : Activity
 
@@ -93,7 +93,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   fun ledSetStatusLight(call: MethodCall, result: Result) {
     var type: Int? = call.argument<Int>("status")
     if (type != null) {
-      pd108.ledSetStatusLight(type)
+      pd108?.ledSetStatusLight(type)
       result.success(true);
     }else{
       result.success(false);
@@ -139,36 +139,42 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     serialPort = call.argument<String>("serialPort")
     serialBaudrate = call.argument<Int>("serialBaudrate")
     pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
-    pd108.connect(result)
+    pd108?.connect(result)
   }
 
   fun connectionCheck(call: MethodCall, result: Result) {
-    pd108.connectedCheck(result)
+
+    if(pd108 != null) {
+      pd108?.connectedCheck(result)
+    }else{
+      result.success(false);
+    }
+
   }
 
   fun distroySdk(call: MethodCall, result: Result) {
-    pd108.onDestroy(result);
+    pd108?.onDestroy(result);
   }
 
   fun clearLine(call: MethodCall, result: Result) {
-    pd108.cleanLine(result)
+    pd108?.cleanLine(result)
   }
 
   fun clearScreen(call: MethodCall, result: Result) {
-    pd108.cleanScreen(result)
+    pd108?.cleanScreen(result)
   }
 
   fun ledInit(call: MethodCall, result: Result) {
-    pd108.ledInit(result)
+    pd108?.ledInit(result)
   }
 
   fun disconnected(call: MethodCall, result: Result) {
-    pd108.disConnect(result)
+    pd108?.disConnect(result)
   }
 
   fun displayText(call: MethodCall, result: Result) {
     var textdata : String? = call.argument<String>("text")
-    pd108.displayText(textdata!!, result)
+    pd108?.displayText(textdata!!, result)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
