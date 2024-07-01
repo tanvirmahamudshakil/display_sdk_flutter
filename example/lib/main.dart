@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:display_sdk_flutter/display_sdk_flutter.dart';
 
+import 'serialport.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -44,7 +46,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LedDisplay(),
+      home: SerialPortPage(),
       // home: Scaffold(
       //   appBar: AppBar(
       //     title: const Text('Plugin example app'),

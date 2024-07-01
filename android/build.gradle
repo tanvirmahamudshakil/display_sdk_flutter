@@ -2,10 +2,11 @@ group 'com.example.display_sdk_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.8.10'
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 
     dependencies {
@@ -18,6 +19,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -29,7 +31,7 @@ android {
         namespace 'com.example.display_sdk_flutter'
     }
 
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -51,7 +53,7 @@ android {
 
     dependencies {
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
+        testImplementation 'org.mockito:mockito-core:5.1.0'
     }
 
     testOptions {
@@ -66,8 +68,21 @@ android {
         }
     }
 }
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.github.felHR85:UsbSerial:6.1.0' // Force the desired version
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+//        implementation ('com.github.felHR85:UsbSerial:6.1.0') {
+//        exclude group: 'com.felhr.deviceids'
+//        exclude group: 'com.felhr.usbserial'
+//        exclude group: 'com.felhr.utils'
+//    }
+
     implementation files('libs/DisplaySDK-2.2.2.jar')
 //    implementation files('libs/XXPermissions-13.5.aar')
 //    implementation files('libs/classes.jar')
