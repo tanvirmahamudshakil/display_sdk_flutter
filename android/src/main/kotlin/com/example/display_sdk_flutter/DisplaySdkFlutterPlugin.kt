@@ -80,7 +80,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
-    Log.e("send method", "onMethodCall: ${call.method}", )
+
     if (call.method == "getPlatformVersion") {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } else if (call.method == setDisplayType){
@@ -233,6 +233,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   fun printer80LetText(call: MethodCall, result: Result) {
     val textdata : String? = call.argument<String>("text")
     val lightType : Int? = call.argument<Int>("lightType")
+    Log.e("send method", "onMethodCall: ${lightType} --- ${textdata}", )
     printer80Led?.sendTex(lightType ?: 1, textdata ?: "0", result)
   }
 
