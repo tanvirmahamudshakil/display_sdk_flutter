@@ -6,9 +6,12 @@ import android.hardware.usb.UsbDeviceConnection
 import android.hardware.usb.UsbManager
 import com.felhr.usbserial.UsbSerialDevice
 import com.felhr.usbserial.UsbSerialInterface
+import io.flutter.plugin.common.MethodChannel.Result
 
-class Printer80Led(context: Context) {
-
+class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, serialFlag: Int) {
+    private var serialPort = "USB" //定义串口号
+    private var serialBaudrate = 9600 //定义波特率
+    private var serialFlag = 0
     private var connected : Boolean = false;
     private var mContext : Context = context;
     private lateinit var usbManager: UsbManager
@@ -17,11 +20,18 @@ class Printer80Led(context: Context) {
     var port: UsbSerialDevice? = null
 
     init {
+        this.serialPort = serialPort
+        this.serialBaudrate = serialBaudrate
+        this.serialFlag = serialFlag
         usbManager = mContext.getSystemService(Context.USB_SERVICE) as UsbManager
     }
 
 
-    fun connect(serialPort : String, baudRate : Int, flowControl : Int) {
+    fun connect(result: Result) {
+        if(connected) {
+            disConnect()
+        }
+
         val deviceList = usbManager.deviceList
         usbDevice = deviceList.values.find { it.deviceName == serialPort}
         if(usbDevice != null) {
@@ -30,19 +40,23 @@ class Printer80Led(context: Context) {
                  port = UsbSerialDevice.createUsbSerialDevice(usbDevice, usbConnection);
                 if (port != null) {
                     port?.open();
-                    port?.setBaudRate(baudRate);
+                    port?.setBaudRate(serialBaudrate);
                     port?.setDataBits(UsbSerialInterface.DATA_BITS_8);
                     port?.setStopBits(UsbSerialInterface.STOP_BITS_1);
-                    port?.setParity(flowControl);
+                    port?.setParity(serialFlag);
                     connected = true
+                    result.success(connected)
                 }else{
                     connected = false;
+                    result.success(connected)
                 }
             }else{
                 connected = false;
+                result.success(connected)
             }
         }else{
             connected = false;
+            result.success(connected)
         }
 
     }
@@ -61,12 +75,16 @@ class Printer80Led(context: Context) {
            connected = false
            usbConnection = null;
        }
+
     }
 
-    fun sendTex(lightType: Int, text: String) {
+    fun sendTex(lightType: Int, text: String, result: Result) {
         if(port != null) {
             val guestDisplay = GuestDisplay(port)
             guestDisplay.sendDisplayInstruction(lightType, text)
+            result.success(true);
+        }else{
+            result.success(false);
         }
     }
 

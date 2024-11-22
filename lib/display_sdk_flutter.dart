@@ -16,9 +16,11 @@ class DisplaySdkFlutter {
   final String _displayText = "displayText";
   final String _letStatusLight = "letStatusLight";
 
+  final String _printer80LedConnect = "printer80LedConnect";
+  final String _printer80LetText = "printer80LetText";
+
   Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
@@ -28,8 +30,7 @@ class DisplaySdkFlutter {
   }
 
   Future<bool?> setDisplayType({required String displayType}) async {
-    final version = await methodChannel
-        .invokeMethod<bool?>(_setDisplayType, {"displayType": displayType});
+    final version = await methodChannel.invokeMethod<bool?>(_setDisplayType, {"displayType": displayType});
     return version;
   }
 
@@ -42,10 +43,8 @@ class DisplaySdkFlutter {
     return list;
   }
 
-  Future<bool?> displayConnectSdk(
-      {required String serialPort, required int serialBaudrate}) async {
-    final version = await methodChannel.invokeMethod<bool>(_displayConnectSdk,
-        {"serialPort": serialPort, "serialBaudrate": serialBaudrate});
+  Future<bool?> displayConnectSdk({required String serialPort, required int serialBaudrate}) async {
+    final version = await methodChannel.invokeMethod<bool>(_displayConnectSdk, {"serialPort": serialPort, "serialBaudrate": serialBaudrate});
     return version;
   }
 
@@ -80,17 +79,16 @@ class DisplaySdkFlutter {
   }
 
   Future<bool?> displayText({required String text}) async {
-    final version =
-        await methodChannel.invokeMethod<bool>(_displayText, {"text": text});
+    final version = await methodChannel.invokeMethod<bool>(_displayText, {"text": text});
     return version;
   }
 
   Future<bool?> ledStatusLight({required int status}) async {
-    final version = await methodChannel
-        .invokeMethod<bool>(_letStatusLight, {"status": status});
+    final version = await methodChannel.invokeMethod<bool>(_letStatusLight, {"status": status});
     return version;
   }
-    void permissionForDisplaySdk() async {
+
+  void permissionForDisplaySdk() async {
     var manageExternalStorage = await Permission.manageExternalStorage.status;
     var storage = await Permission.storage.status;
     if (manageExternalStorage.isDenied) {
@@ -100,5 +98,16 @@ class DisplaySdkFlutter {
     if (storage.isDenied) {
       await Permission.storage.request();
     }
+  }
+
+
+  Future<bool?> printer80LedConnect({required String serialPort, required int serialBaudrate}) async {
+    final version = await methodChannel.invokeMethod<bool>(_printer80LedConnect, {"serialPort": serialPort, "serialBaudrate": serialBaudrate});
+    return version;
+  }
+
+   Future<bool?> printer80LedText({required String text, required int lightType}) async {
+    final version = await methodChannel.invokeMethod<bool>(_printer80LetText, {"text": text, "lightType": lightType});
+    return version;
   }
 }

@@ -76,7 +76,7 @@ configurations.all {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
 //        implementation ('com.github.felHR85:UsbSerial:6.1.0') {
 //        exclude group: 'com.felhr.deviceids'
 //        exclude group: 'com.felhr.usbserial'

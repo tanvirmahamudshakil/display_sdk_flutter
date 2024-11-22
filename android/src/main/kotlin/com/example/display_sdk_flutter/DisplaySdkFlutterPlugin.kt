@@ -13,6 +13,7 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.util.Log
+import com.example.display_sdk_flutter.LedApi.Printer80Led
 import com.felhr.usbserial.UsbSerialDevice
 import com.pavolibrary.utils.LogUtils
 import com.serialport.api.SerialPortFinder
@@ -38,6 +39,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   private var m_Messenger: BinaryMessenger? = null
   private var m_EventSink: EventSink? = null
 
+  private var printer80Led : Printer80Led? = null;
   private val ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION"
   val ACTION_USB_ATTACHED: String = "android.hardware.usb.action.USB_DEVICE_ATTACHED"
   val ACTION_USB_DETACHED: String = "android.hardware.usb.action.USB_DEVICE_DETACHED"
@@ -56,13 +58,16 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   private var displayText = "displayText";
   private var letStatusLight = "letStatusLight";
 
+  private var printer80LedConnect = "printer80LedConnect";
+  private var printer80LetText = "printer80LetText";
+
 
   private var displayType : String = "PD108";
   private var serialBaudrate : Int? = 9600
   private var serialPort : String? = "USB"
   private var serialFlag : Int? = 0;
   private  var pd108 : PD108? = null;
-  private var context : Context? = null;
+  private lateinit var context : Context;
   private lateinit var activity : Activity
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -70,6 +75,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "display_sdk_flutter")
     context = flutterPluginBinding.applicationContext
     //pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
+
     channel.setMethodCallHandler(this)
   }
 
@@ -111,7 +117,12 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
       }
     }else if (call.method == "listDevices") {
       listDevices(result)
-    } else {
+    } else if (call.method == printer80LedConnect) {
+      printer80LedConnect(call, result)
+    } else if (call.method == printer80LetText) {
+      printer80LetText(call, result)
+    }
+    else {
       result.notImplemented()
     }
   }
@@ -174,18 +185,23 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   fun sdkConnect(call: MethodCall, result: Result) {
     serialPort = call.argument<String>("serialPort")
     serialBaudrate = call.argument<Int>("serialBaudrate")
-    pd108 = context?.let { PD108(it,serialPort!!,serialBaudrate!!, serialFlag!!) }
+    pd108 = PD108(context,serialPort!!,serialBaudrate!!, serialFlag!!)
     pd108?.connect(result)
   }
 
-  fun connectionCheck(call: MethodCall, result: Result) {
+  fun printer80LedConnect(call: MethodCall, result: Result) {
+    serialPort = call.argument<String>("serialPort")
+    serialBaudrate = call.argument<Int>("serialBaudrate")
+    printer80Led = Printer80Led(context,serialPort!!,serialBaudrate!!, serialFlag!!)
+    printer80Led?.connect(result)
+  }
 
+  fun connectionCheck(call: MethodCall, result: Result) {
     if(pd108 != null) {
       pd108?.connectedCheck(result)
     }else{
       result.success(false);
     }
-
   }
 
   fun distroySdk(call: MethodCall, result: Result) {
@@ -211,6 +227,12 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   fun displayText(call: MethodCall, result: Result) {
     var textdata : String? = call.argument<String>("text")
     pd108?.displayText(textdata!!, result)
+  }
+
+  fun printer80LetText(call: MethodCall, result: Result) {
+    val textdata : String? = call.argument<String>("text")
+    val lightType : Int? = call.argument<Int>("lightType")
+    printer80Led?.sendTex(lightType ?: 1, textdata ?: "0", result)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -492,10 +514,9 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   }
 
   private fun unregister() {
-    context?.unregisterReceiver(usbReceiver)
+    context.unregisterReceiver(usbReceiver)
     m_EventChannel!!.setStreamHandler(null)
     m_Manager = null
-    context = null
     m_Messenger = null
   }
 
