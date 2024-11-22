@@ -40,7 +40,7 @@ class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, s
         val deviceList = usbManager.deviceList
         usbDevice = deviceList.values.find { it.deviceName == serialport.filePath}
         deviceList.values.forEach {
-            Log.e("serialPort", "connect: ${it.deviceName} --- ${serialport.filePath}", )
+
         }
         if(usbDevice != null) {
             usbConnection =  usbManager.openDevice(usbDevice)
@@ -88,10 +88,12 @@ class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, s
 
     fun sendTex(lightType: Int, text: String, result: Result) {
         if(port != null) {
+            Log.e("send text", "connect: ${text} ---", )
             val guestDisplay = GuestDisplay(port)
             guestDisplay.sendDisplayInstruction(lightType, text)
             result.success(true);
         }else{
+            Log.e("send Not text", "connect: ${text} ---", )
             result.success(false);
         }
     }
