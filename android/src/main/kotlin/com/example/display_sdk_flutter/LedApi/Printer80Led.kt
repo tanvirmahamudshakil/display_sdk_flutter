@@ -4,9 +4,12 @@ import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbDeviceConnection
 import android.hardware.usb.UsbManager
+import android.util.Log
 import com.felhr.usbserial.UsbSerialDevice
 import com.felhr.usbserial.UsbSerialInterface
+import com.pavolibrary.io.SerialAPI
 import io.flutter.plugin.common.MethodChannel.Result
+import java.io.File
 
 class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, serialFlag: Int) {
     private var serialPort = "USB" //定义串口号
@@ -32,8 +35,13 @@ class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, s
             disConnect()
         }
 
+        var serialport = SerialAPI(File(serialPort), serialBaudrate, serialFlag)
+
         val deviceList = usbManager.deviceList
-        usbDevice = deviceList.values.find { it.deviceName == serialPort}
+        usbDevice = deviceList.values.find { it.deviceName == serialport.filePath}
+        deviceList.values.forEach {
+            Log.e("serialPort", "connect: ${it.deviceName} --- ${serialport.filePath}", )
+        }
         if(usbDevice != null) {
             usbConnection =  usbManager.openDevice(usbDevice)
             if(usbConnection != null) {
