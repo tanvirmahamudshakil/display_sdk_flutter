@@ -87,8 +87,9 @@ class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, s
     }
 
     fun sendTex(lightType: Int, text: String, result: Result) {
+        Log.e("send text", "connect: ${text} ---", )
         if(port != null) {
-            Log.e("send text", "connect: ${text} ---", )
+
             val guestDisplay = GuestDisplay(port)
             guestDisplay.sendDisplayInstruction(lightType, text)
             result.success(true);
