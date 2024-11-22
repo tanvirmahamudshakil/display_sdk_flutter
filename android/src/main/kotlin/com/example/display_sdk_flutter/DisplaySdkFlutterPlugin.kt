@@ -80,6 +80,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
+    Log.e("send method", "onMethodCall: ${call.method}", )
     if (call.method == "getPlatformVersion") {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } else if (call.method == setDisplayType){
