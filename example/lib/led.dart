@@ -25,8 +25,7 @@ class _LedDisplayState extends State<LedDisplay> {
 
   void connect() async {
     if (selectserialport != null && selectboundrate != null) {
-      var data = await _displaySdk.displayConnectSdk(
-          serialPort: selectserialport!, serialBaudrate: selectboundrate!);
+      var data = await _displaySdk.displayConnectSdk(serialPort: selectserialport!, serialBaudrate: selectboundrate!);
       showsnakbar("${data}");
     } else {
       showsnakbar("serial port and selectboundrate must be select");
@@ -92,8 +91,7 @@ class _LedDisplayState extends State<LedDisplay> {
                 color: Colors.orange,
                 onPressed: () async {
                   print("sdvsdvb ${textEditingController.text}");
-                  var data = await _displaySdk.displayText(
-                      text: textEditingController.text);
+                  var data = await _displaySdk.printer80LedText(text: textEditingController.text, lightType: PRINTER80LEDTEXTTOTAL);
                   showsnakbar("${data}");
                 },
                 child: const Text("Display"),
@@ -152,10 +150,7 @@ class _LedDisplayState extends State<LedDisplay> {
               Container(
                 width: 150,
                 child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(10)),
+                  decoration: InputDecoration(border: OutlineInputBorder(), isDense: true, contentPadding: EdgeInsets.all(10)),
                   hint: Text(
                     "Select USB",
                     style: TextStyle(color: Colors.white),
@@ -175,18 +170,14 @@ class _LedDisplayState extends State<LedDisplay> {
               SizedBox(
                 width: 150,
                 child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(10)),
+                  decoration: InputDecoration(border: OutlineInputBorder(), isDense: true, contentPadding: EdgeInsets.all(10)),
                   hint: const Text(
                     "Boundrate",
                     style: TextStyle(color: Colors.white),
                   ),
                   items: List.generate(BaudrateLed.length, (index) {
                     var data = BaudrateLed[index];
-                    return DropdownMenuItem(
-                        child: Text(data.toString()), value: index);
+                    return DropdownMenuItem(child: Text(data.toString()), value: index);
                   }),
                   onChanged: (value) {
                     setState(() {
