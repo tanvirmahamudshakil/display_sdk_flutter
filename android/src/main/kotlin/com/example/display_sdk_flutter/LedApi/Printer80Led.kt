@@ -40,7 +40,7 @@ class Printer80Led(context: Context, serialPort : String, serialBaudrate: Int, s
         val deviceList = usbManager.deviceList
         usbDevice = deviceList.values.find { it.deviceName == serialport.filePath}
         deviceList.values.forEach {
-
+            Log.e("serial Port Data", "connect: ${it.deviceName} ---- ${serialport.filePath}", )
         }
         if(usbDevice != null) {
             usbConnection =  usbManager.openDevice(usbDevice)
