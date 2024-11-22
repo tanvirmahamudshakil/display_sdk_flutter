@@ -173,18 +173,12 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   }
 
   fun serialPortFinder(call: MethodCall, result: Result) {
-    var mSeralPortFinder = SerialPortFinder()
-    var  usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
-//    val entryValues: Array<String> = mSerialPortFinder.getAllDevicesPath()
-    var alldevice = usbManager.deviceList
+    var mSerialPortFinder = SerialPortFinder()
+    val entryValues: Array<String> = mSerialPortFinder.getAllDevicesPath()
     val allDevices: MutableList<String> = ArrayList()
     allDevices.add("USB")
-//    for (i in entryValues.indices) {
-//      allDevices.add(entryValues[i])
-//    }
-
-    alldevice.forEach {
-      allDevices.add(it.key)
+    for (i in entryValues.indices) {
+      allDevices.add(entryValues[i])
     }
     result.success(allDevices)
   }
@@ -239,7 +233,6 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   fun printer80LetText(call: MethodCall, result: Result) {
     val textdata : String? = call.argument<String>("text")
     val lightType : Int? = call.argument<Int>("lightType")
-
     printer80Led?.sendTex(lightType ?: 1, textdata ?: "0", result)
   }
 
