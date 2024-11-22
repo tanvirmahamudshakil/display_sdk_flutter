@@ -233,7 +233,7 @@ class DisplaySdkFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware,
   fun printer80LetText(call: MethodCall, result: Result) {
     val textdata : String? = call.argument<String>("text")
     val lightType : Int? = call.argument<Int>("lightType")
-    Log.e("send method", "onMethodCall: ${lightType} --- ${textdata}", )
+    
     printer80Led?.sendTex(lightType ?: 1, textdata ?: "0", result)
   }
 
