@@ -16,8 +16,6 @@ class DisplaySdkFlutter {
   final String _displayText = "displayText";
   final String _letStatusLight = "letStatusLight";
 
-  final String _printer80LedConnect = "printer80LedConnect";
-  final String _printer80LetText = "printer80LetText";
 
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
@@ -100,14 +98,4 @@ class DisplaySdkFlutter {
     }
   }
 
-
-  Future<bool?> printer80LedConnect({required String serialPort, required int serialBaudrate}) async {
-    final version = await methodChannel.invokeMethod<bool>(_printer80LedConnect, {"serialPort": serialPort, "serialBaudrate": serialBaudrate});
-    return version;
-  }
-
-   Future<bool?> printer80LedText({required String text, required int lightType}) async {
-    final version = await methodChannel.invokeMethod<bool>(_printer80LetText, {"text": text, "lightType": lightType});
-    return version;
-  }
 }

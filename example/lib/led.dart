@@ -25,7 +25,7 @@ class _LedDisplayState extends State<LedDisplay> {
 
   void connect() async {
     if (selectserialport != null && selectboundrate != null) {
-      var data = await _displaySdk.printer80LedConnect(serialPort: selectserialport!, serialBaudrate: selectboundrate!);
+      var data = await _displaySdk.displayConnectSdk(serialPort: selectserialport!, serialBaudrate: selectboundrate!);
       showsnakbar("${data}");
     } else {
       showsnakbar("serial port and selectboundrate must be select");
@@ -54,8 +54,8 @@ class _LedDisplayState extends State<LedDisplay> {
 
   @override
   void initState() {
-    // _displaySdk.setDisplayType(displayType: DisplayType.PD108.name);
-    // letdisplay();
+    _displaySdk.setDisplayType(displayType: DisplayType.PD108.name);
+    letdisplay();
     super.initState();
   }
 
@@ -91,8 +91,9 @@ class _LedDisplayState extends State<LedDisplay> {
                 color: Colors.orange,
                 onPressed: () async {
                   print("sdvsdvb ${textEditingController.text}");
-                  var data = await _displaySdk.printer80LedText(text: textEditingController.text, lightType: PRINTER80LEDTEXTTOTAL);
-                  showsnakbar("${data}");
+                  await _displaySdk.ledStatusLight(status: 2);
+                  var data = await _displaySdk.displayText(text: textEditingController.text);
+                  showsnakbar("$data");
                 },
                 child: const Text("Display"),
               ),
